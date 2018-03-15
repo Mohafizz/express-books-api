@@ -5,6 +5,7 @@ const bookSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  author: String,
   created: {
     type: Date,
     default: Date.now
