@@ -22,7 +22,6 @@ router.get("/:title", async function(req, res, next) {
     const titleSearch = await Book.find({
       title: new RegExp(title, "i")
     }).exec();
-    console.log("{ title: title }: ", { title: title });
     res.send({ "searched keyword": `${req.params.title}`, titleSearch });
   } catch (err) {
     next(err);
@@ -49,35 +48,45 @@ router.post("/createBook", async function(req, res, next) {
 });
 
 router.patch("/updateTitle/:title", async function(req, res, next) {
-  let findTitle = req.params.title;
-  let updateTitle = req.body.title;
   try {
-    //
-    const titleSearch = await Book.findOneAndUpdate({
-      title: new RegExp(findTitle, "i"),
-      title: updateTitle,
-      new: true
-    })
-      .exec()
-      .save();
-    console.log(titleSearch);
-  } catch (e) {}
-  res.send({
-    message: `Book updated with new title...`,
-    updateTitle
-  });
+    let findTitle = req.params.title;
+    console.log("findTitle: ", findTitle);
+    let updateTitle = {
+      title: req.body.title
+    };
+    const titleSearch = await Book.findOneAndUpdate(
+      {
+        title: new RegExp(findTitle, "i")
+      },
+      updateTitle,
+      { new: true }
+    ).exec();
+    res.send({
+      message: `Book updated with new title...`,
+      titleSearch
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.delete("delete/:title", async function(req, res, next) {
-  let findTitle = req.params.title;
   try {
-    const titleSearch = await Book.findOneAndRemove({
-      title: new RegExp(findTitle, "i")
-    }).exec();
-  } catch (e) {}
-  res.send({
-    message: `Book with title ${deleteBook} successfully deleted...`
-  });
+    let findTitle = req.params.title;
+    // let updateTitle = {
+    //   title: req.body.title
+    // };
+    const titleSearch = await Book.findOneAndRemove(
+      { title: new RegExp(findTitle, "i") },
+      { findTitle },
+      { new: true }
+    ).exec();
+    res.send({
+      message: `Book with title successfully deleted...${titleSearch}`
+    });
+  } catch (e) {
+    next(err);
+  }
 });
 
 module.exports = router;
