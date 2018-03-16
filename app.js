@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").load();
+}
 const mongoose = require("mongoose");
 const Book = require("./models/book");
 var express = require("express");
@@ -12,59 +15,9 @@ var books = require("./routes/books");
 
 var app = express();
 
-mongoose.connect("mongodb://localhost/books_db", async function(err) {
-  if (err) throw err;
-
-  console.log("Successfully connected");
-
-  // var storyBook = new Book({
-  //   _id: new mongoose.Types.ObjectId(),
-  //   title: "Ghost story"
-  // });
-
-  // await storyBook.save();
-
-  // console.log("Story book successfully saved.");
-
-  // var fictionBook = new Book({
-  //   _id: new mongoose.Types.ObjectId(),
-  //   title: "Fiction novel"
-  // });
-
-  // await fictionBook.save();
-
-  // console.log("Fiction book successfully saved.");
-
-  // var biographyBook = new Book({
-  //   _id: new mongoose.Types.ObjectId(),
-  //   title: "Biography of Steven Hawkings"
-  // });
-
-  // await biographyBook.save();
-
-  // console.log("Biography book successfully saved.");
-
-  // const storySearch = await Book.find({
-  //   title: /story/i
-  // }).exec();
-  // console.log("Found books with with names", storySearch);
-
-  // const fictionSearch = await Book.find({
-  //   title: /fiction/i
-  // }).exec();
-  // console.log("Found books with with names", fictionSearch);
-
-  // const bioBookSearch = await Book.find({
-  //   title: /bio/i
-  // }).exec();
-  // console.log("Found `Biography` books with with name", bioBookSearch);
-
-  // const removeAllBooks = Book.remove(function(err, product) {
-  //   if (err) return handleError(err);
-  //   console.log(product); // null
-  // });
-
-  // await removeAllBooks.exec();
+const dbUrl = process.env.MONGODB_URI;
+mongoose.connect(dbUrl, {}).then(async () => {
+  console.log("Connected to mongo database at " + dbUrl);
 });
 
 // view engine setup
